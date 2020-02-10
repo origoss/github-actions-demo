@@ -4,17 +4,18 @@ on: [push]
 
 jobs:
 
-  build:
+  push:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build and push the Docker image
-      env:
-        DOCKERHUB_ACCESS_TOKEN: ${{ secrets.dockerhub_access_token }}
+    - name: Build image
+      run: docker build . --file Dockerfile --tag image
+    - name: Docker login
+      run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
+    - name: Push image
       run: |
         DOCKER_TAG=$(date +%s)
-        docker login --username gregorigoss --password ${DOCKERHUB_ACCESS_TOKEN}         
-        docker build . --file Dockerfile --tag origoss/github-actions-demo:${DOCKER_TAG} 
+        docker tag image origoss/github-actions-demo:${DOCKER_TAG} 
         docker push origoss/github-actions-demo:${DOCKER_TAG}
