@@ -17,11 +17,11 @@ jobs:
     - name: Push image
       run: |
         echo REF: ${{ github.ref }}
-        if [[ ${{ githug.ref }} =~ refs/tags/(.+)]]
+        if [[ ${{ github.ref }} =~ refs/tags/(.+)]]
         then
            # tag is pushed
            DOCKER_TAG=${BASH_REMATCH[1]}
-        elif [[ ${{ githug.ref }} =~ refs/heads/(.+)]]
+        elif [[ ${{ github.ref }} =~ refs/heads/(.+)]]
         then
            # branch is pushed
            DOCKER_TAG=${BASH_REMATCH[1]}-$(date +%s)
