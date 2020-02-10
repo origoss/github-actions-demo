@@ -13,8 +13,8 @@ jobs:
     - name: Build and push the Docker image
       env:
         DOCKERHUB_ACCESS_TOKEN: ${{ secrets.dockerhub_access_token }}
-        DOCKER_TAG: $(date +%s)
       run: |
-        docker login --username gregorigoss --password ${DOCKERHUB_ACCESS_TOKEN}         && \
-        docker build . --file Dockerfile --tag origoss/github-actions-demo:${DOCKER_TAG} && \
+        DOCKER_TAG=$(date +%s)
+        docker login --username gregorigoss --password ${DOCKERHUB_ACCESS_TOKEN}         
+        docker build . --file Dockerfile --tag origoss/github-actions-demo:${DOCKER_TAG} 
         docker push origoss/github-actions-demo:${DOCKER_TAG}
