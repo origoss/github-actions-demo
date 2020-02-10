@@ -1,0 +1,44 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+options: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+title: README
+#+date: <2020-02-10 Mon>
+#+author: Gergely Szabo
+#+email: gergely.szabo@origoss.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.3 (Org mode 9.3.1)
+#+options: gid:nil html-link-use-abs-url:nil html-postamble:auto
+#+options: html-preamble:t html-scripts:t html-style:t tex:t toc-tag:nil
+#+options: toc-todo:nil whn:t
+#+html_container: div
+#+html_link_home:
+#+html_link_up:
+#+html_mathjax:
+#+html_head: <link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"> <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+#+html_head_extra:
+#+creator: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.3 (<a href="http://orgmode.org">Org-mode</a> 9.3.1)
+#+latex_header:
+
+* Build Dockerfile
+
+  #+begin_src bash :results verbatim
+    docker build . -t origoss/github-actions-demo:latest
+  #+end_src
+
+  #+RESULTS:
+  : Sending build context to Docker daemon  78.85kB
+  : Step 1/2 : FROM nginx
+  :  ---> 5ad3bd0e67a9
+  : Step 2/2 : COPY README.html /usr/share/nginx/html/index.html
+  :  ---> 8562ef10c52e
+  : Successfully built 8562ef10c52e
+  : Successfully tagged origoss/github-actions-demo:latest
+
+* Docker run
+
+  #+begin_src bash :results verbatim :eval never
+    docker run --rm -p 8080:80 origoss/github-actions-demo:latest
+  #+end_src
