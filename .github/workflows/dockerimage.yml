@@ -17,5 +17,6 @@ jobs:
     - name: Push image
       run: |
         DOCKER_TAG=$(date +%s)
+        echo REF: ${{ github.ref }}
         docker tag image origoss/github-actions-demo:${DOCKER_TAG} 
         docker push origoss/github-actions-demo:${DOCKER_TAG}
