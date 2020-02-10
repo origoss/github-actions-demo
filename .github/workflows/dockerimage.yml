@@ -14,5 +14,5 @@ jobs:
       run: docker build . --file Dockerfile --tag origoss/github-actions-demo:$(date +%s)
     - name: Docker login
       env:
-        DOCKERHUB_ACCESS_TOKEN: ${{ dockerhub_access_token }}
+        DOCKERHUB_ACCESS_TOKEN: ${{ secrets.dockerhub_access_token }}
       run: docker login --username gregorigoss --password ${DOCKERHUB_ACCESS_TOKEN}
