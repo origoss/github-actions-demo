@@ -22,6 +22,8 @@
 #+creator: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.3 (<a href="http://orgmode.org">Org-mode</a> 9.3.1)
 #+latex_header:
 
+[[https://github.com/origoss/github-actions-demo/workflows/Docker%20Image%20CI/badge.svg][https://github.com/origoss/github-actions-demo/workflows/Docker%20Image%20CI/badge.svg]]
+
 * Build Dockerfile
 
   #+begin_src bash :results verbatim
@@ -29,12 +31,12 @@
   #+end_src
 
   #+RESULTS:
-  : Sending build context to Docker daemon  78.85kB
+  : Sending build context to Docker daemon    105kB
   : Step 1/2 : FROM nginx
   :  ---> 5ad3bd0e67a9
   : Step 2/2 : COPY README.html /usr/share/nginx/html/index.html
-  :  ---> 8562ef10c52e
-  : Successfully built 8562ef10c52e
+  :  ---> 8c5d6711215d
+  : Successfully built 8c5d6711215d
   : Successfully tagged origoss/github-actions-demo:latest
 
 * Docker run
