@@ -16,7 +16,17 @@ jobs:
       run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
     - name: Push image
       run: |
-        DOCKER_TAG=$(date +%s)
         echo REF: ${{ github.ref }}
+        if [[ ${{ githug.ref }} =~ refs/tags/(.+)]]
+        then
+           # tag is pushed
+           DOCKER_TAG=${BASH_REMATCH[1]}
+        elif [[ ${{ githug.ref }} =~ refs/heads/(.+)]]
+        then
+           # branch is pushed
+           DOCKER_TAG=${BASH_REMATCH[1]}-$(date +%s)
+        else
+           DOCKER_TAG=latest
+        fi
         docker tag image origoss/github-actions-demo:${DOCKER_TAG} 
         docker push origoss/github-actions-demo:${DOCKER_TAG}
