@@ -36,5 +36,5 @@ jobs:
       run: |
         cd kustomize-repo
         echo $(date) > date.txt
-        git commit -am 'Updating date.txt"
+        git commit -am "Updating date.txt"
         git push
