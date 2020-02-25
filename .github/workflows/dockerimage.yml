@@ -35,6 +35,7 @@ jobs:
         path: kustomize-repo
     - name: Create a new file
       run: |
+        echo ${{ env.GIT_BRANCH }}
         cd kustomize-repo
         echo $(date) > date.txt
         git add date.txt
