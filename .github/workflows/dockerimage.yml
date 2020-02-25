@@ -22,6 +22,7 @@ jobs:
         elif [[ ${{ github.ref }} =~ refs/heads/(.+) ]]
         then
            # branch is pushed
+           echo "::set-env name=GIT_BRANCH::${BASH_REMATCH[1]}"
            DOCKER_TAG=${BASH_REMATCH[1]}-$(date +%s)
         fi
         echo Pushing origoss/github-actions-demo:${DOCKER_TAG} 
