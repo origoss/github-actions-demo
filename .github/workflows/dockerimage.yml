@@ -3,11 +3,8 @@ name: Docker Image CI
 on: [push]
 
 jobs:
-
   push:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build image
@@ -30,3 +27,8 @@ jobs:
         echo Pushing origoss/github-actions-demo:${DOCKER_TAG} 
         docker tag image origoss/github-actions-demo:${DOCKER_TAG} 
         docker push origoss/github-actions-demo:${DOCKER_TAG}
+    - uses: actions/checkout@v2
+      with:
+        repository: origoss/kustomize-to-walls
+        token: ${{secrets.github_access_token }}
+        path: kustomize-repo
