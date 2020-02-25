@@ -35,11 +35,14 @@ jobs:
         path: kustomize-repo
     - name: Create a new file
       run: |
-        echo ${{ env.GIT_BRANCH }}
-        cd kustomize-repo
-        echo $(date) > date.txt
-        git add date.txt
-        git config user.name "CI of github-actions-demo"
-        git config user.email "noreply@ci.origoss.com"
-        git commit -am "Updating date.txt"
-        git push
+        cd kustomize-repo/manifests/overlays
+        if [[ -d ${{ env.GIT_BRANCH }} ]]; then
+          echo "git overlay for branch exists"
+          cd ${{ env.GIT_BRANCH }}
+          echo $(date) > date.txt
+          git add date.txt
+          git config user.name "CI of github-actions-demo"
+          git config user.email "noreply@ci.origoss.com"
+          git commit -am "Updating date.txt"
+          git push
+        fi
