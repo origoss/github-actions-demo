@@ -36,5 +36,7 @@ jobs:
       run: |
         cd kustomize-repo
         echo $(date) > date.txt
+        git config user.name "CI of github-actions-demo"
+        git config user.email "noreply@ci.origoss.com"
         git commit -am "Updating date.txt"
         git push
