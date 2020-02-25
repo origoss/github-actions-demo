@@ -24,6 +24,7 @@ jobs:
            # branch is pushed
            echo "::set-env name=GIT_BRANCH::${BASH_REMATCH[1]}"
            DOCKER_TAG=${BASH_REMATCH[1]}-$(date +%s)
+           echo "::set-env name=DOCKER_TAG::${DOCKER_TAG}"
         fi
         echo Pushing origoss/github-actions-demo:${DOCKER_TAG} 
         docker tag image origoss/github-actions-demo:${DOCKER_TAG} 
@@ -33,16 +34,20 @@ jobs:
         repository: origoss/kustomize-to-walls
         token: ${{secrets.github_access_token }}
         path: kustomize-repo
+    - name: Downloading kustomize
+      run: |
+        wget -q https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz
+        tar xf kustomize_v3.5.4_linux_amd64.tar.gz
+        sudo cp kustomize /usr/local/bin/
     - name: Create a new file
       run: |
         cd kustomize-repo/manifests/overlays
         if [[ -d ${{ env.GIT_BRANCH }} ]]; then
           echo "git overlay for branch exists"
           cd ${{ env.GIT_BRANCH }}
-          echo $(date) > date.txt
-          git add date.txt
+          kustomize edit set image origoss/github-actions-demo:${{ env.DOCKER_TAG }}
           git config user.name "CI of github-actions-demo"
           git config user.email "noreply@ci.origoss.com"
-          git commit -am "Updating date.txt"
+          git commit -am "Updating image tag"
           git push
         fi
