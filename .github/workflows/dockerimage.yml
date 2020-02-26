@@ -48,6 +48,6 @@ jobs:
           kustomize edit set image origoss/github-actions-demo:${{ env.DOCKER_TAG }}
           git config user.name "CI of github-actions-demo"
           git config user.email "noreply@ci.origoss.com"
-          git commit -am "Updating image tag"
+          git commit -am "Updating image tag: origoss/github-actions-demo:${{ env.DOCKER_TAG }}"
           git push
         fi
