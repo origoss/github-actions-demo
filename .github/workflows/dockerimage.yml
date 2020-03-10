@@ -11,9 +11,9 @@ jobs:
       run: |
         docker build . --file Dockerfile.first.kube --tag first
         docker build . --file Dockerfile.second.kube --tag second
-    - name: Docker login
-      run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
-    - name: Push image
+    # - name: Docker login
+    #   run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
+    - name: Get image tag
       run: |
         DOCKER_TAG=latest
         echo REF: ${{ github.ref }}
@@ -26,33 +26,42 @@ jobs:
            # branch is pushed
            echo "::set-env name=GIT_BRANCH::${BASH_REMATCH[1]}"
            DOCKER_TAG=${BASH_REMATCH[1]}-$(date +%s)
-           echo "::set-env name=DOCKER_TAG::${DOCKER_TAG}"
         fi
-        echo Pushing origoss/github-actions-demo:${DOCKER_TAG} 
-        docker tag first origoss/github-actions-demo:first-${DOCKER_TAG}
-        docker push origoss/github-actions-demo:first-${DOCKER_TAG}
-        docker tag second origoss/github-actions-demo:second-${DOCKER_TAG}
-        docker push origoss/github-actions-demo:second-${DOCKER_TAG}
+        echo "::set-env name=DOCKER_TAG::${DOCKER_TAG}"
     - uses: actions/checkout@v2
       with:
         repository: origoss/kustomize-to-walls
         token: ${{secrets.github_access_token }}
         path: kustomize-repo
-    - name: Downloading kustomize
+    - uses: origoss/build-push-kustomize@77ed88b
+      with:
+        imageNames: "first second"
+        imageTagPrefix: "origoss/github-actions-demo:"
+        imageTagSuffix: "-${{ env.DOCKER_TAG }}"
+        dockerFileSuffix: ".kube"
+        dockerUsername: gregorigoss
+        dockerPassword: ${{ secrets.dockerhub_access_token }}
+        kustomizeRepoPath: kustomize-repo/manifests/overlays/${{ env.GIT_BRANCH }}
+        gitUserEmail: "noreply@origoss.com"
+    # - name: Downloading kustomize
+    #   run: |
+    #     wget -q https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz
+    #     tar xf kustomize_v3.5.4_linux_amd64.tar.gz
+    #     sudo cp kustomize /usr/local/bin/
+    # - name: Create a new file
+    #   run: |
+    #     cd kustomize-repo/manifests/overlays
+    #     if [[ -d ${{ env.GIT_BRANCH }} ]]; then
+    #       echo "git overlay for branch exists"
+    #       cd ${{ env.GIT_BRANCH }}
+    #       kustomize edit set image first=origoss/github-actions-demo:first-${{ env.DOCKER_TAG }}
+    #       kustomize edit set image second=origoss/github-actions-demo:second-${{ env.DOCKER_TAG }}
+    #       git config user.name "CI of github-actions-demo"
+    #       git config user.email "noreply@ci.origoss.com"
+    #       git commit -am "Updating image tag: origoss/github-actions-demo:${{ env.DOCKER_TAG }}"
+    #       git push
+    #     fi
+    - name: Pushing git repo
       run: |
-        wget -q https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz
-        tar xf kustomize_v3.5.4_linux_amd64.tar.gz
-        sudo cp kustomize /usr/local/bin/
-    - name: Create a new file
-      run: |
-        cd kustomize-repo/manifests/overlays
-        if [[ -d ${{ env.GIT_BRANCH }} ]]; then
-          echo "git overlay for branch exists"
-          cd ${{ env.GIT_BRANCH }}
-          kustomize edit set image origoss/github-actions-demo=origoss/github-actions-demo:first-${{ env.DOCKER_TAG }}
-          kustomize edit set image origoss/github-actions-demo-2=origoss/github-actions-demo:second-${{ env.DOCKER_TAG }}
-          git config user.name "CI of github-actions-demo"
-          git config user.email "noreply@ci.origoss.com"
-          git commit -am "Updating image tag: origoss/github-actions-demo:${{ env.DOCKER_TAG }}"
-          git push
-        fi
+        cd kustomize-repo
+        git push
