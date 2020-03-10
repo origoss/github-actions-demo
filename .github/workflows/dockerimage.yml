@@ -33,7 +33,7 @@ jobs:
         repository: origoss/kustomize-to-walls
         token: ${{secrets.github_access_token }}
         path: kustomize-repo
-    - uses: origoss/build-push-kustomize@6604350
+    - uses: origoss/build-push-kustomize@c5fc087
       with:
         imageNames: "first second"
         imageTagPrefix: "origoss/github-actions-demo:"
