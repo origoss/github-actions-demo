@@ -49,7 +49,8 @@ jobs:
         if [[ -d ${{ env.GIT_BRANCH }} ]]; then
           echo "git overlay for branch exists"
           cd ${{ env.GIT_BRANCH }}
-          kustomize edit set image origoss/github-actions-demo:1-${{ env.DOCKER_TAG }}
+          kustomize edit set image origoss/github-actions-demo=origoss/github-actions-demo:1-${{ env.DOCKER_TAG }}
+          kustomize edit set image origoss/github-actions-demo-2=origoss/github-actions-demo:2-${{ env.DOCKER_TAG }}
           git config user.name "CI of github-actions-demo"
           git config user.email "noreply@ci.origoss.com"
           git commit -am "Updating image tag: origoss/github-actions-demo:${{ env.DOCKER_TAG }}"
