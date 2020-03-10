@@ -9,8 +9,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build image
       run: |
-        docker build . --file Dockerfile --tag image-1
-        docker build . --file Dockerfile.2 --tag image-2
+        docker build . --file Dockerfile.first.kube --tag first
+        docker build . --file Dockerfile.second.kube --tag second
     - name: Docker login
       run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
     - name: Push image
@@ -29,10 +29,10 @@ jobs:
            echo "::set-env name=DOCKER_TAG::${DOCKER_TAG}"
         fi
         echo Pushing origoss/github-actions-demo:${DOCKER_TAG} 
-        docker tag image-1 origoss/github-actions-demo:1-${DOCKER_TAG} 
-        docker push origoss/github-actions-demo:1-${DOCKER_TAG}
-        docker tag image-2 origoss/github-actions-demo:2-${DOCKER_TAG} 
-        docker push origoss/github-actions-demo:2-${DOCKER_TAG}
+        docker tag first origoss/github-actions-demo:first-${DOCKER_TAG}
+        docker push origoss/github-actions-demo:first-${DOCKER_TAG}
+        docker tag second origoss/github-actions-demo:second-${DOCKER_TAG}
+        docker push origoss/github-actions-demo:second-${DOCKER_TAG}
     - uses: actions/checkout@v2
       with:
         repository: origoss/kustomize-to-walls
@@ -49,8 +49,8 @@ jobs:
         if [[ -d ${{ env.GIT_BRANCH }} ]]; then
           echo "git overlay for branch exists"
           cd ${{ env.GIT_BRANCH }}
-          kustomize edit set image origoss/github-actions-demo=origoss/github-actions-demo:1-${{ env.DOCKER_TAG }}
-          kustomize edit set image origoss/github-actions-demo-2=origoss/github-actions-demo:2-${{ env.DOCKER_TAG }}
+          kustomize edit set image origoss/github-actions-demo=origoss/github-actions-demo:first-${{ env.DOCKER_TAG }}
+          kustomize edit set image origoss/github-actions-demo-2=origoss/github-actions-demo:second-${{ env.DOCKER_TAG }}
           git config user.name "CI of github-actions-demo"
           git config user.email "noreply@ci.origoss.com"
           git commit -am "Updating image tag: origoss/github-actions-demo:${{ env.DOCKER_TAG }}"
