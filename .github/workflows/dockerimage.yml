@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build image
-      run: |
-        docker build . --file Dockerfile.first.kube --tag first
-        docker build . --file Dockerfile.second.kube --tag second
+    # - name: Build image
+    #   run: |
+    #     docker build . --file Dockerfile.first.kube --tag first
+    #     docker build . --file Dockerfile.second.kube --tag second
     # - name: Docker login
     #   run: docker login --username gregorigoss --password ${{ secrets.dockerhub_access_token }}         
     - name: Get image tag
@@ -33,6 +33,7 @@ jobs:
         repository: origoss/kustomize-to-walls
         token: ${{secrets.github_access_token }}
         path: kustomize-repo
+        ref: eks
     - uses: origoss/build-push-kustomize@6e6cb5f
       with:
         imageNames: "first second"
